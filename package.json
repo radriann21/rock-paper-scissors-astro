@@ -10,9 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^5.1.1",
+    "@astrojs/tailwind": "5.1.1",
     "@fontsource/barlow-semi-condensed": "5.1.0",
-    "astro": "^4.15.11",
-    "tailwindcss": "^3.4.13"
+    "astro": "4.15.11",
+    "tailwindcss": "3.4.13"
+  },
+  "devDependencies": {
+    "daisyui": "4.12.13"
   }
 }
