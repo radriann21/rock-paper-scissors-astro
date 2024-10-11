@@ -6,6 +6,9 @@ export default {
 			fontFamily: {
 				'global': ['"Barlow Semi Condensed", sans-serif']
 			},
+			backgroundImage: {
+				'triangle': "url('/images/bg-triangle.svg')"
+			},
 			colors: {
 				neutral: {
 					'dark-text': 'hsl(229, 25%, 31%)',
