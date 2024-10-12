@@ -4,8 +4,8 @@ import RulesModal from '../components/RulesModal.astro';
 import Main from '../components/Main.jsx'
 ---
 <Layout title="Rock, Papper, Scissors">
-	<main class="w-full min-h-screen p-4 md:p-8 flex flex-col justify-around lg:justify-between items-center relative">
-		<Main />
+	<main class="w-full min-h-screen p-2 md:p-8 flex flex-col justify-around items-center relative">
+		<Main client:visible />
 		<RulesModal />
 	</main>
 </Layout>
