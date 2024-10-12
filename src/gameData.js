@@ -21,3 +21,21 @@ export const options = [
     directions: 'bottom-0'
   }
 ]
+
+export const resultsMap = {
+  wrap: {
+    wrap: 'draw', 
+    smash: 'you lose', 
+    cut: 'you win', 
+  },
+  smash: {
+    wrap: 'you win', 
+    smash: 'draw', 
+    cut: 'you lose', 
+  },
+  cut: {
+    wrap: 'you lose', 
+    smash: 'you win', 
+    cut: 'draw', 
+  },
+}

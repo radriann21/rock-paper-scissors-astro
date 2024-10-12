@@ -1,84 +1,11 @@
-import { useState, useEffect } from "react"
-import OptionButton from "./OptionButton"
 import Header from "./Header"
-import { options } from "../options"
-import { OptionsList } from "./OptionList"
-
-const resultsMap = {
-  wrap: {
-    wrap: 'draw', 
-    smash: 'you lose', 
-    cut: 'you win', 
-  },
-  smash: {
-    wrap: 'you win', 
-    smash: 'draw', 
-    cut: 'you lose', 
-  },
-  cut: {
-    wrap: 'you lose', 
-    smash: 'you win', 
-    cut: 'draw', 
-  },
-};
-
-
-const SelectionScreen = ({ playerChoice, computerChoice, result }) => {
-  return (
-    <section className="w-full h-[320px] flex justify-around px-8">
-      <section>
-        <h3 className="uppercase text-lg text-white mb-4">You picked</h3>
-        <OptionButton 
-          gradientColors={playerChoice.gradientColors}
-          imgSrc={playerChoice.image}
-          value={playerChoice.value}
-        />
-      </section>
-
-      <section className="w-[20%]">
-        {
-          result ? (
-            <div> 
-              <h3 className="text-center uppercase text-5xl font-bold text-white tracking-wider">{result}</h3>
-              <button onClick={() => window.location.reload()} className="btn w-full mt-4 bg-white text-rose-500 uppercase transition-all duration-300 hover:bg-slate-200 hover:shadow-lg">
-                Play Again
-              </button>
-            </div>
-          ) 
-          : null
-        }
-       
-      </section>
-
-      <section>
-        <h3 className="uppercase text-lg text-white mb-4 px-auto">The house picked</h3>
-        {
-          computerChoice
-          ? (
-            <OptionButton 
-              gradientColors={computerChoice.gradientColors}
-              imgSrc={computerChoice.image}
-              value={computerChoice.value}
-            />
-          )
-          : null
-        }
-      </section>
-    </section>
-  )
-}
-
-const ListScreen = ({ options, handleOption }) => {
-  return (
-    <section className="w-full md:w-[60%] lg:w-[30%] h-[320px] bg-triangle bg-no-repeat bg-center p-8 flex items-center justify-center relative">
-      <OptionsList options={options} handleOption={handleOption} />
-    </section>
-  )
-}
+import { useState, useEffect, useCallback } from "react"
+import { options, resultsMap } from "../gameData"
+import { ListScreen } from "./ListScreen"
+import { SelectionScreen } from "./SelectionScreen"
 
 const Main = () => {
-
-  const [score, setScore] = useState(0)
+  const [score, setScore] = useState(JSON.parse(localStorage.getItem('score')) || 0)
   const [playerChoice, setPlayerChoice] = useState(null)
   const [computerChoice, setComputerChoice] = useState(null)
   const [result, setResult] = useState(null)
@@ -87,30 +14,37 @@ const Main = () => {
     setPlayerChoice(option)
   }
 
-  const determineWinner = () => {
+  const determineWinner = useCallback(() => {
     if (!playerChoice || !computerChoice) return null
-    return resultsMap[playerChoice.value][computerChoice.value] || null
-  }
+    const outcome = resultsMap[playerChoice.value][computerChoice.value] || null
+    if (outcome === 'you win') setScore((prevScore) => prevScore + 1)
+    if (outcome === 'you lose') setScore(0)
+    return outcome;
+  }, [playerChoice, computerChoice])
 
-  const getRamdomOption = () => {
-    const randomOption= Math.floor(Math.random() * options.length)
-    return options[randomOption]
-  }
+  const getRandomOption = useCallback(() => {
+    const randomIndex = Math.floor(Math.random() * options.length);
+    return options[randomIndex];
+  }, [])
 
   useEffect(() => {
     if (playerChoice) {
       const timer = setTimeout(() => {
-        setComputerChoice(getRamdomOption())
+        setComputerChoice(getRandomOption())
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [playerChoice])
+  }, [playerChoice, getRandomOption])
 
   useEffect(() => {
     if (computerChoice) {
       setResult(determineWinner())
     }
-  }, [computerChoice])
+  }, [computerChoice, determineWinner])
+
+  useEffect(() => {
+    localStorage.setItem('score', JSON.stringify(score))
+  }, [score])
 
   return (
     <>
